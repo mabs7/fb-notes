@@ -40,20 +40,50 @@ h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; }
    2. FROSTED HEADER & TICKER (Mobile First)
    ========================================= */
 .navbar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 15px 20px; position: sticky; top: 0; z-index: 100;
-    background-color: rgba(255, 255, 255, 0.72); backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    padding: 15px 20px; 
+    position: sticky; 
+    top: 0; 
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.72); 
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px); 
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.nav-left { flex: 1; display: flex; align-items: center; }
+/* Force logo to the far left and let it take up available space */
+.nav-left { 
+    order: 1; 
+    flex: 1; 
+    display: flex; 
+    align-items: center; 
+}
 .logo { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; }
 
-/* Mobile Navbar Ordering */
-.nav-right { display: flex; align-items: center; margin-right: 15px; }
-.admin-link { color: var(--accent); font-weight: 500; text-decoration: none; font-size: 0.9rem; }
-.hamburger { background: none; border: none; font-size: 1.5rem; color: var(--text-main); cursor: pointer; display: block; }
+/* Group the Dark Mode and Admin buttons together */
+.nav-right { 
+    order: 2; 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; /* Creates perfect, even spacing between the buttons */
+}
+.admin-link { color: var(--accent); font-weight: 500; text-decoration: none; font-size: 0.95rem; }
 
+/* Keep the hamburger on the far right */
+.hamburger { 
+    order: 3; 
+    margin-left: 15px; /* Space between the Admin link and the Hamburger */
+    background: none; 
+    border: none; 
+    font-size: 1.5rem; 
+    color: var(--text-main); 
+    cursor: pointer; 
+    display: block; 
+}
+
+/* Hidden Mobile Menu */
 .nav-menu {
     display: none; flex-direction: column; position: absolute;
     top: 60px; left: 0; width: 100%; background-color: rgba(255, 255, 255, 0.95);
@@ -63,6 +93,7 @@ h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; }
 .nav-link { display: block; padding: 15px 20px; text-decoration: none; color: var(--text-main); font-size: 1rem; cursor: pointer; }
 .chevron { font-size: 0.8rem; color: var(--text-muted); margin-left: 4px; }
 
+/* Dropdowns */
 .dropdown-menu { display: none; flex-direction: column; background-color: var(--bg-body); }
 .dropdown-item { padding: 12px 30px; color: var(--text-main); text-decoration: none; font-size: 0.95rem; transition: background-color 0.2s; }
 .dropdown-item:hover { background-color: rgba(0, 113, 227, 0.08); color: var(--accent); }
@@ -193,13 +224,28 @@ h2 { font-size: 1.4rem; margin-bottom: 15px; }
    7. MEDIA QUERIES (Desktop Overrides)
    ========================================= */
 @media (min-width: 768px) {
-    /* Navbar unlocks into full row */
+    /* Hide the mobile toggle */
     .hamburger { display: none; }
-    .nav-left { flex: 1; }
-    .nav-right { flex: 1; justify-content: flex-end; margin-right: 0; }
-    .nav-menu { display: flex !important; flex-direction: row; justify-content: center; position: static; width: auto; background: none; border: none; backdrop-filter: none; }
+    
+    /* Keep Logo on the left */
+    .nav-left { flex: 1; order: 1; }
+    
+    /* Drop the main navigation menu into the exact center */
+    .nav-menu { 
+        order: 2;
+        display: flex !important; 
+        flex-direction: row; 
+        justify-content: center; 
+        position: static; 
+        width: auto; 
+        background: none; 
+        border: none; 
+        backdrop-filter: none; 
+    }
     .nav-item { border-top: none; margin: 0 10px; }
     .nav-link { padding: 8px 12px; }
+    
+    /* Desktop Dropdown Adjustments */
     .dropdown-menu {
         position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
         background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px);
@@ -208,19 +254,27 @@ h2 { font-size: 1.4rem; margin-bottom: 15px; }
     }
     .dropdown-item { padding: 10px 20px; }
 
-    /* Grids expand */
+    /* Push the Dark Mode and Admin buttons to the far right */
+    .nav-right { 
+        flex: 1; 
+        order: 3; 
+        justify-content: flex-end; 
+    }
+    
+    /* Expand the grids */
     .card-grid { grid-template-columns: repeat(4, 1fr); gap: 15px; }
     .grid-card { height: 100px; }
     .team-grid { grid-template-columns: repeat(4, 1fr); gap: 15px; }
     
-    /* Forms side-by-side */
+    /* Put admin forms side-by-side */
     .form-row { grid-template-columns: 1fr 1fr; }
 
-    /* Typography scale up */
+    /* Scale up typography and spacing */
     .hero { padding: 80px 20px 60px; }
     .hero h1 { font-size: 3.5rem; }
     .hero p { font-size: 1.1rem; }
     
+    /* Center the footer links in a row */
     .footer-actions { flex-direction: row; justify-content: center; }
     .btn-footer { width: 200px; }
 }
