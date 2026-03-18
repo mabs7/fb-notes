@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Federal Board Notes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-left">
+            <div class="logo">Notes.</div>
+        </div>
+        
+        <button class="hamburger" aria-label="Toggle Menu">☰</button>
+        
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <a href="#classes" class="nav-link">Classes <span class="chevron">▾</span></a>
+                <div class="dropdown-menu" id="nav-class-dropdown"></div>
+            </div>
+            
+            <div class="nav-item">
+                <a href="#subjects" class="nav-link">Subjects <span class="chevron">▾</span></a>
+                <div class="dropdown-menu" id="nav-subject-dropdown"></div>
+            </div>
+        </nav>
+        
+        <div class="nav-right">
+            <button id="theme-toggle" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-right: 15px;">🌙</button>
+            <a href="login.html" class="nav-link admin-link">Admin</a>
+        </div>
+    </header>
+
+    <div class="announcement-ticker">
+        <div class="ticker-content" id="dynamic-ticker">
+            </div>
+    </div>
+
+    <main>
+        <section class="hero">
+            <canvas id="hero-canvas"></canvas>
+            
+            <div class="hero-content">
+                <h1>Master your exams.</h1>
+                <p>Clear, precise science notes for Classes 9-12.</p>
+                
+                <div class="hero-search-container">
+                    <input type="text" id="main-search" placeholder="Search for a topic (e.g., Kinematics)..." class="hero-search" autocomplete="off">
+                    
+                    <div id="search-dropdown-results" class="search-dropdown"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="classes" class="class-section">
+            <h2>Classes</h2>
+            <div id="dynamic-class-grid" class="card-grid"></div>
+        </section>
+
+        <section id="subjects" class="subject-section">
+            <h2>Subjects</h2>
+            <div id="dynamic-subject-grid" class="card-grid"></div>
+        </section>
+        
+        </main>
+
+    <footer class="site-footer">
+        <div class="footer-actions">
+            <a href="/about.html" class="btn-footer">About Us</a>
+            <a href="/contact.html" class="btn-footer">Contact</a>
+            <a href="/request.html" class="btn-footer">Request Topic</a>
+        </div>
+        
+        <div class="team-section">
+            <h2>Our Team</h2>
+            <div id="dynamic-team-grid" class="team-grid"></div>
+        </div>
+
+        <div class="copyright">
+            <p>&copy; 2026 FB Notes.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

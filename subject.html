@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Subject Notes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">Notes.</a>
+        </div>
+        <div class="nav-right">
+            <button id="theme-toggle" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-right: 15px;">🌙</button>
+            <a href="index.html" class="nav-link admin-link">Back to Home</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" style="padding: 60px 20px 40px; margin-bottom: 20px;">
+            <h1 id="dynamic-subject-name" style="font-size: 3rem;">Loading...</h1>
+            <p style="color: var(--text-muted);">Explore all available notes across different classes.</p>
+        </section>
+
+        <section class="recent-notes" style="max-width: 800px; margin: 0 auto;">
+            <ul id="dynamic-subject-notes" class="note-list">
+                </ul>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="copyright">
+            <p>&copy; 2026 FB Notes.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

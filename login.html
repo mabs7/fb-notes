@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | FB Notes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-color: var(--bg-body); display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+
+    <main style="width: 100%; max-width: 400px; padding: 20px;">
+        <div class="admin-card" style="text-align: center; padding: 40px 30px;">
+            <div class="logo" style="font-size: 2rem; margin-bottom: 10px; color: var(--accent);">Notes.</div>
+            <h1 style="margin-bottom: 30px; font-size: 1.5rem;">Admin Gateway</h1>
+            
+            <form id="login-form" class="admin-form">
+                <input type="email" id="login-email" class="admin-input" placeholder="Team Email" required>
+                <input type="password" id="login-password" class="admin-input" placeholder="Password" required>
+                
+                <p id="login-error" style="color: #ff3b30; font-size: 0.85rem; display: none; margin-bottom: 10px;">Invalid credentials.</p>
+                
+                <button type="submit" class="btn-primary" id="login-btn" style="width: 100%; margin-top: 10px;">Secure Login</button>
+            </form>
+            
+            <a href="index.html" style="display: block; margin-top: 20px; color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">&larr; Back to Public Site</a>
+        </div>
+    </main>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

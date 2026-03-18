@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request a Topic | FB Notes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">Notes.</a>
+        </div>
+        <div class="nav-right">
+            <a href="index.html" class="nav-link admin-link" style="background-color: var(--card-bg); padding: 8px 16px; border-radius: var(--radius-pill); border: 1px solid var(--border-light);">Home</a>
+        </div>
+    </header>
+
+    <main style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+        <section class="hero" style="background: none; border: none; padding: 40px 0; margin-bottom: 0;">
+            <h1 style="font-size: 3rem; margin-bottom: 10px;">Request a Topic.</h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem;">Can't find what you're looking for? Tell us.</p>
+        </section>
+
+        <section class="admin-card">
+            <form class="admin-form" onsubmit="event.preventDefault(); alert('Request submitted! Our team will work on this topic soon.'); this.reset();">
+                <input type="text" class="admin-input" placeholder="Topic Name (e.g., Bohr's Atomic Model)" required>
+                
+                <div class="form-row">
+                    <select class="admin-input" required>
+                        <option value="">Select Class</option>
+                        <option value="9">Class 9</option>
+                        <option value="10">Class 10</option>
+                        <option value="11">Class 11</option>
+                        <option value="12">Class 12</option>
+                    </select>
+                    <input type="text" class="admin-input" placeholder="Subject (e.g., Chemistry)" required>
+                </div>
+                
+                <textarea class="admin-input" rows="4" placeholder="Any specific details or questions you want covered in these notes?" style="resize: vertical; font-family: inherit;"></textarea>
+                
+                <button type="submit" class="btn-primary" style="margin-top: 10px;">Submit Request</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="site-footer" style="margin-top: 60px;">
+        <div class="copyright">
+            <p>&copy; 2026 FB Notes.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

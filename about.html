@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | FB Notes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">Notes.</a>
+        </div>
+        <div class="nav-right">
+            <a href="index.html" class="nav-link admin-link" style="background-color: var(--card-bg); padding: 8px 16px; border-radius: var(--radius-pill); border: 1px solid var(--border-light);">Home</a>
+        </div>
+    </header>
+
+    <main style="max-width: 800px; margin: 0 auto; padding: 40px 20px;">
+        <section class="hero" style="background: none; border: none; padding: 40px 0; margin-bottom: 20px;">
+            <h1 style="font-size: 3rem; margin-bottom: 10px;">About Notes.</h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem;">Built for the future of Pakistan's students.</p>
+        </section>
+
+        <section class="admin-card" style="margin-bottom: 40px; text-align: left; padding: 40px;">
+            <h2 style="margin-bottom: 15px;">Our Mission</h2>
+            <p style="color: var(--text-main); margin-bottom: 20px; font-size: 1.05rem;">
+                The Federal Board curriculum is rigorous, but finding high-quality, straight-to-the-point study materials shouldn't be. 
+                We built this platform to cut through the noise and provide clear, precise science notes for Classes 9 through 12.
+            </p>
+            <p style="color: var(--text-main); font-size: 1.05rem;">
+                By combining data engineering principles with educational content building, our goal is to democratize access to top-tier learning resources across Pakistan. No clutter, no distractions—just exactly what you need to crush your exams.
+            </p>
+        </section>
+
+        <section class="team-section">
+            <h2 style="text-align: center; margin-bottom: 30px;">The Team</h2>
+            <div id="dynamic-team-grid" class="team-grid"></div>
+        </section>
+        
+        <div id="dynamic-class-grid" style="display: none;"></div>
+        <div id="dynamic-subject-grid" style="display: none;"></div>
+        <div id="dynamic-recent-notes" style="display: none;"></div>
+    </main>
+
+    <footer class="site-footer" style="margin-top: auto;">
+        <div class="copyright">
+            <p>&copy; 2026 FB Notes.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
