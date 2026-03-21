@@ -29,10 +29,21 @@ let state = {
     team: []
 };
 
-// Fetch everything from Firebase before rendering the site
+// Fetch everything from Firebase (or our local cache) before rendering the site
 async function loadCloudDatabase() {
+    // 1. CHECK THE BACKPACK: Do we already have the data saved for this session?
+    const cachedData = sessionStorage.getItem('fbNotesCache');
+    
+    if (cachedData) {
+        // We found it! Instantly load it and skip the Firebase network call
+        state = JSON.parse(cachedData);
+        console.log("⚡ Loaded data instantly from session cache!");
+        return; 
+    }
+
     try {
-        // We fetch all 4 collections at the exact same time for maximum speed
+        // 2. NO CACHE FOUND: Fetch fresh from Firebase (This only happens on the first page load)
+        console.log("☁️ Fetching fresh data from Firebase...");
         const [classesSnap, subjectsSnap, notesSnap, teamSnap] = await Promise.all([
             getDocs(collection(db, "classes")),
             getDocs(collection(db, "subjects")),
@@ -40,14 +51,17 @@ async function loadCloudDatabase() {
             getDocs(collection(db, "team"))
         ]);
 
-        // Unpack the Firebase data into our state arrays
+        // Unpack the Firebase data
         state.classes = classesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         state.subjects = subjectsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         state.notes = notesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         state.team = teamSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-        // Sort notes by date (newest first)
+        // Sort notes by date
         state.notes.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // 3. FILL THE BACKPACK: Save this fresh data so the next page clicks load instantly
+        sessionStorage.setItem('fbNotesCache', JSON.stringify(state));
         
     } catch (error) {
         console.error("Error connecting to Firebase:", error);
@@ -316,6 +330,7 @@ function initAdminPage() {
                 date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
             });
             alert(`Note Added to Global Database!`);
+            sessionStorage.removeItem('fbNotesCache');
             location.reload();
         } catch(err) { alert("Error saving note: " + err.message); submitBtn.disabled = false; }
     });
@@ -325,7 +340,9 @@ function initAdminPage() {
         e.preventDefault();
         try {
             await addDoc(collection(db, "subjects"), { name: document.getElementById('input-subject-name').value });
-            alert(`Subject Added to Cloud!`); location.reload(); 
+            alert(`Subject Added to Cloud!`); 
+            sessionStorage.removeItem('fbNotesCache');
+            location.reload(); 
         } catch(err) { alert("Error: " + err.message); }
     });
 
@@ -334,7 +351,9 @@ function initAdminPage() {
         e.preventDefault();
         try {
             await addDoc(collection(db, "classes"), { name: document.getElementById('input-class-name').value });
-            alert(`Class Added to Cloud!`); location.reload();
+            alert(`Class Added to Cloud!`); 
+            sessionStorage.removeItem('fbNotesCache');
+            location.reload();
         } catch(err) { alert("Error: " + err.message); }
     });
 
@@ -351,7 +370,9 @@ function initAdminPage() {
                 const imgBase64 = event.target.result; 
                 try {
                     await addDoc(collection(db, "team"), { name, subject, img: imgBase64 });
-                    alert(`Team member Added to Cloud!`); location.reload();
+                    alert(`Team member Added to Cloud!`); 
+                    sessionStorage.removeItem('fbNotesCache');
+                    location.reload();
                 } catch(err) { alert("Error: " + err.message); }
             };
             reader.readAsDataURL(fileInput.files[0]);
@@ -372,7 +393,9 @@ function initAdminPage() {
                     state.team.forEach(t => deletePromises.push(deleteDoc(doc(db, "team", t.id))));
                     
                     await Promise.all(deletePromises);
-                    alert("Global Database wiped clean."); location.reload(); 
+                    alert("Global Database wiped clean."); 
+                    sessionStorage.removeItem('fbNotesCache');
+                    location.reload(); 
                 } catch(err) { alert("Error wiping DB: " + err.message); }
             }
         });
@@ -411,6 +434,7 @@ function initAdminPage() {
                         // Delete specific document from the 'notes' collection
                         await deleteDoc(doc(db, "notes", noteId));
                         alert('Note deleted from the cloud!');
+                        sessionStorage.removeItem('fbNotesCache');
                         location.reload();
                     } catch(err) {
                         alert("Error deleting note: " + err.message);
@@ -443,7 +467,9 @@ function initAdminPage() {
                 if (confirm('Delete this class?')) {
                     try {
                         await deleteDoc(doc(db, "classes", e.target.getAttribute('data-id')));
-                        alert('Class deleted!'); location.reload();
+                        alert('Class deleted!'); 
+                        sessionStorage.removeItem('fbNotesCache');
+                        location.reload();
                     } catch(err) { alert("Error: " + err.message); }
                 }
             });
@@ -471,7 +497,9 @@ function initAdminPage() {
                 if (confirm('Delete this subject?')) {
                     try {
                         await deleteDoc(doc(db, "subjects", e.target.getAttribute('data-id')));
-                        alert('Subject deleted!'); location.reload();
+                        alert('Subject deleted!'); 
+                        sessionStorage.removeItem('fbNotesCache');
+                        location.reload();
                     } catch(err) { alert("Error: " + err.message); }
                 }
             });
@@ -509,6 +537,7 @@ function initAdminPage() {
                         try {
                             await deleteDoc(doc(db, "team", e.target.getAttribute('data-id')));
                             alert('Team member removed from the site!'); 
+                            sessionStorage.removeItem('fbNotesCache');
                             location.reload();
                         } catch(err) { 
                             alert("Error deleting member: " + err.message); 
