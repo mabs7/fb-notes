@@ -11,7 +11,7 @@
         }
     </script>
 </head>
-<body style="background-color: var(--bg-color);">
+<body>
 
     <header class="navbar">
         <div class="nav-left">
@@ -19,8 +19,9 @@
         </div>
         
         <div class="nav-actions">
-            <a href="index.html" style="color: var(--text-muted); font-size: 0.95rem; text-decoration: none; margin-right: 10px;">View Site</a>
+            <button id="theme-toggle" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-right: 15px;">🌙</button>
             
+            <a href="index.html" style="color: var(--text-muted); font-size: 0.95rem; text-decoration: none; margin-right: 10px;">View Site</a>
             <button id="btn-logout" class="btn-primary" style="background-color: #1c1c1e; padding: 8px 16px; font-size: 0.9rem;">Logout</button>
         </div>
     </header>
@@ -66,7 +67,7 @@
             <h2>Manage Subjects</h2>
             <form id="form-add-subject" class="admin-form">
                 <input type="text" id="input-subject-name" class="admin-input" placeholder="Subject Name (e.g., Urdu)" required>
-                <button type="submit" class="btn-primary" style="background-color: var(--text-main);">Add Subject</button>
+                <button type="submit" class="btn-primary">Add Subject</button>
             </form>
             <div id="admin-subjects-list" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;"></div>
         </section>
@@ -75,7 +76,7 @@
             <h2>Manage Classes</h2>
             <form id="form-add-class" class="admin-form">
                 <input type="text" id="input-class-name" class="admin-input" placeholder="Class Name (e.g., Class 8)" required>
-                <button type="submit" class="btn-primary" style="background-color: var(--text-main);">Add Class</button>
+                <button type="submit" class="btn-primary" >Add Class</button>
             </form>
             <div id="admin-classes-list" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;"></div>
         </section>
@@ -91,7 +92,7 @@
                     <input type="file" id="input-team-img" class="admin-input" accept="image/*" required style="padding: 10px;">
                 </div>
 
-                <button type="submit" class="btn-primary" style="background-color: var(--text-main);">Add Member</button>
+                <button type="submit" class="btn-primary">Add Member</button>
             </form>
             <div id="admin-team-list" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;"></div>
         </section>
