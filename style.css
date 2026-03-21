@@ -314,5 +314,37 @@ h2 { font-size: 1.4rem; margin-bottom: 15px; }
     .grid-card { height: 100px; }
     .team-grid { grid-template-columns: repeat(4, 1fr); gap: 15px; }
     
-    /* ... keep your form-row, hero, and footer overrides below here ... */
+    /* --- DESKTOP CENTERING OVERRIDES --- */
+    
+    /* 1. Stop main sections from stretching across the whole screen */
+    .class-section, .subject-section, .team-section, .admin-container {
+        max-width: 850px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* 2. Turn the huge stacked footer buttons (About, Contact, Request) into a neat centered row */
+    .footer-actions {
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+        max-width: 850px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .btn-footer {
+        padding: 12px 30px; /* Gives them a nice pill shape instead of stretching */
+    }
+
+    /* 3. Keep the team banner perfectly centered */
+    .team-banner-container {
+        max-width: 850px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* 4. Center grids if they only have 1 or 2 items */
+    .card-grid {
+        justify-content: center;
+    }
 }
