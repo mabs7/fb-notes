@@ -356,6 +356,39 @@ function renderAboutPage() {
     }
 }
 
+function initContactForm() {
+    const contactForm = document.getElementById('form-contact');
+    if (!contactForm) return; // Only run if we are actually on the Contact page
+
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Stop the page from reloading
+        
+        const btn = e.target.querySelector('button');
+        const originalText = btn.textContent;
+        btn.textContent = "Sending securely...";
+        btn.disabled = true;
+
+        try {
+            // Push the data to a new 'messages' collection in Firebase
+            await addDoc(collection(db, "messages"), {
+                name: document.getElementById('contact-name').value,
+                email: document.getElementById('contact-email').value,
+                message: document.getElementById('contact-message').value,
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                status: 'unread' // Useful for your admin dashboard later!
+            });
+            
+            alert("Message sent successfully! We will get back to you soon.");
+            contactForm.reset(); // Clear the form
+        } catch (error) {
+            alert("Error sending message: " + error.message);
+        } finally {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+    });
+}
+
 // ==========================================
 // 5. ADMIN DASHBOARD CLOUD WRITES
 // ==========================================
@@ -717,6 +750,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderClassPage();  
     renderSubjectPage(); 
     renderNotePage();
-    renderAboutPage();   
+    renderAboutPage();
+    initContactForm();   
     initAdminPage();    
 });

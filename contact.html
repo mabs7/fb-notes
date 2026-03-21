@@ -49,15 +49,13 @@
         </section>
 
         <section class="admin-card">
-            <form class="admin-form" onsubmit="event.preventDefault(); alert('Message sent successfully! We will get back to you soon.'); this.reset();">
-                <div class="form-row">
-                    <input type="text" class="admin-input" placeholder="Your Name" required>
-                    <input type="email" class="admin-input" placeholder="Your Email" required>
-                </div>
-                <input type="text" class="admin-input" placeholder="Subject" required>
-                <textarea class="admin-input" rows="6" placeholder="How can we help you?" required style="resize: vertical; font-family: inherit;"></textarea>
-                <button type="submit" class="btn-primary" style="margin-top: 10px;">Send Message</button>
-            </form>
+            <form id="form-contact" class="admin-form" style="max-width: 600px; margin: 0 auto;">
+            <input type="text" id="contact-name" class="admin-input" placeholder="Your Name" required>
+            <input type="email" id="contact-email" class="admin-input" placeholder="Your Email" required>
+            <textarea id="contact-message" class="admin-input" rows="5" placeholder="How can we help?" required style="resize: vertical;"></textarea>
+            
+            <button type="submit" class="btn-primary" style="background-color: var(--accent); width: 100%; margin-top: 10px;">Send Message</button>
+        </form>
         </section>
     </main>
 
