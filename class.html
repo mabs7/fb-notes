@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Class Notes</title>
+    <title id="page-title">Class Subjects | FB Notes</title>
     <link rel="stylesheet" href="style.css">
+    
     <script>
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
@@ -27,11 +28,6 @@
                 <div class="dropdown-menu" id="nav-class-dropdown"></div>
             </div>
             
-            <div class="nav-item">
-                <a href="#subjects" class="nav-link">Subjects <span class="chevron">▾</span></a>
-                <div class="dropdown-menu" id="nav-subject-dropdown"></div>
-            </div>
-
             <div class="nav-item mobile-only">
                 <a href="login.html" class="nav-link" style="color: var(--accent); font-weight: 500;">Admin Access</a>
             </div>
@@ -49,12 +45,12 @@
     <main>
         <section class="hero" style="padding: 60px 20px 40px; margin-bottom: 20px;">
             <h1 id="dynamic-class-name" style="font-size: 3rem;">Loading...</h1>
-            <p style="color: var(--text-muted);">Explore all available notes and resources.</p>
+            <p style="color: var(--text-muted);">Select a subject below to view its available notes.</p>
         </section>
 
-        <section class="recent-notes" style="max-width: 800px; margin: 0 auto;">
-            <ul id="dynamic-class-notes" class="note-list">
-                </ul>
+        <section class="class-section" style="max-width: 1000px; margin: 0 auto; padding: 0 20px;">
+            <div id="dynamic-class-subject-grid" class="card-grid">
+                </div>
         </section>
     </main>
 

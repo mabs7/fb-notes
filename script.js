@@ -244,55 +244,82 @@ function renderHomePage() {
 }
 
 function renderClassPage() {
-    const classListContainer = document.getElementById('dynamic-class-notes');
-    if (!classListContainer) return;
+    const subjectGrid = document.getElementById('dynamic-class-subject-grid');
+    if (!subjectGrid) return;
+    
     const urlParams = new URLSearchParams(window.location.search);
     const targetClassName = urlParams.get('name');
     if (!targetClassName) { window.location.href = 'index.html'; return; }
     
-    document.getElementById('page-title').textContent = `${targetClassName} Notes`;
+    document.getElementById('page-title').textContent = `${targetClassName} Subjects`;
     document.getElementById('dynamic-class-name').textContent = targetClassName;
 
-    const classNotes = state.notes.filter(note => note.className === targetClassName);
-    if (classNotes.length === 0) {
-        classListContainer.innerHTML = '<li class="note-item" style="justify-content: center; color: var(--text-muted);">No notes uploaded yet.</li>'; return;
+    subjectGrid.innerHTML = '';
+    
+    // Check which subjects actually have notes for this specific class
+    const availableSubjects = state.subjects.filter(sub => {
+        return state.notes.some(note => note.className === targetClassName && note.subject === sub.name);
+    });
+
+    if (availableSubjects.length === 0) {
+        subjectGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">No subjects available for this class yet.</div>';
+        return;
     }
-    classNotes.forEach(note => {
-        const a = document.createElement('a'); a.className = 'note-item';
-        a.href = `note.html?topic=${encodeURIComponent(note.topic)}&link=${encodeURIComponent(note.driveLink)}`;
-        a.style.textDecoration = 'none'; a.style.color = 'inherit';
-        a.innerHTML = `<span class="date">${note.date}</span><span class="topic">${note.subject}: ${note.topic}</span>`;
-        classListContainer.appendChild(a);
+
+    // Render the available subjects as a grid
+    availableSubjects.forEach((sub, index) => {
+        const tint = colorTints[index % colorTints.length];
+        
+        // CRITICAL: We pass BOTH the class and the subject into the next URL
+        const url = `subject.html?class=${encodeURIComponent(targetClassName)}&subject=${encodeURIComponent(sub.name)}`;
+
+        const card = document.createElement('a'); 
+        card.href = url; 
+        card.className = `grid-card ${tint}`; 
+        card.textContent = sub.name;
+        
+        subjectGrid.appendChild(card);
     });
 }
 
 function renderSubjectPage() {
-    const subjectListContainer = document.getElementById('dynamic-subject-notes');
-    if (!subjectListContainer) return; 
-    const urlParams = new URLSearchParams(window.location.search);
-    const targetSubjectName = urlParams.get('name');
-    if (!targetSubjectName) { window.location.href = 'index.html'; return; }
+    const noteListContainer = document.getElementById('dynamic-subject-notes');
+    if (!noteListContainer) return; 
     
-    document.getElementById('page-title').textContent = `${targetSubjectName} Notes`;
-    document.getElementById('dynamic-subject-name').textContent = targetSubjectName;
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetClassName = urlParams.get('class');
+    const targetSubjectName = urlParams.get('subject');
+    
+    if (!targetClassName || !targetSubjectName) { window.location.href = 'index.html'; return; }
+    
+    document.getElementById('page-title').textContent = `${targetClassName} ${targetSubjectName} Notes`;
+    document.getElementById('dynamic-subject-name').textContent = `${targetClassName} - ${targetSubjectName}`;
 
-    let subjectNotes = state.notes.filter(note => note.subject === targetSubjectName);
-    if (subjectNotes.length === 0) {
-        subjectListContainer.innerHTML = '<li class="note-item" style="justify-content: center; color: var(--text-muted);">No notes uploaded yet.</li>'; return;
+    // Filter notes that match BOTH the class and the subject
+    const filteredNotes = state.notes.filter(note => 
+        note.className === targetClassName && note.subject === targetSubjectName
+    );
+
+    noteListContainer.innerHTML = '';
+    
+    if (filteredNotes.length === 0) {
+        noteListContainer.innerHTML = '<li class="note-item" style="justify-content: center; color: var(--text-muted);">No notes uploaded yet.</li>'; 
+        return;
     }
-    subjectNotes.sort((a, b) => {
-        const classNumA = parseInt(a.className.replace(/\D/g, '')) || 0;
-        const classNumB = parseInt(b.className.replace(/\D/g, '')) || 0;
-        return classNumB - classNumA;
-    });
-    subjectNotes.forEach(note => {
-        const a = document.createElement('a'); a.className = 'note-item';
+
+    filteredNotes.forEach(note => {
+        const a = document.createElement('a'); 
+        a.className = 'note-item';
         a.href = `note.html?topic=${encodeURIComponent(note.topic)}&link=${encodeURIComponent(note.driveLink)}`;
-        a.style.textDecoration = 'none'; a.style.color = 'inherit';
-        a.innerHTML = `<span class="date">${note.date}</span><span class="topic">${note.className}: ${note.topic}</span>`;
-        subjectListContainer.appendChild(a);
+        a.style.textDecoration = 'none'; 
+        a.style.color = 'inherit';
+        
+        // We removed the class/subject from the title because they already know where they are!
+        a.innerHTML = `<span class="date">${note.date}</span><span class="topic">${note.topic}</span>`;
+        noteListContainer.appendChild(a);
     });
 }
+
 
 function renderNotePage() {
     const iframe = document.getElementById('note-iframe');
