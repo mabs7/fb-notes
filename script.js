@@ -477,6 +477,49 @@ function initAdminPage() {
             });
         });
     }
+
+    // --- MANAGE TEAM LIST ---
+    const adminTeamList = document.getElementById('admin-team-list');
+    if (adminTeamList) {
+        adminTeamList.innerHTML = '';
+        if (state.team.length > 0) {
+            state.team.forEach(member => {
+                const div = document.createElement('div');
+                div.style.display = 'flex'; div.style.justifyContent = 'space-between'; div.style.alignItems = 'center';
+                div.style.padding = '10px'; div.style.border = '1px solid var(--border-light)'; div.style.borderRadius = 'var(--radius-md)';
+                
+                // We add a tiny 40x40 image preview so you can see their face in the list
+                div.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img src="${member.img}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-light);">
+                        <div>
+                            <div style="font-weight: 500; font-size: 0.95rem; color: var(--text-main);">${member.name}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">${member.subject}</div>
+                        </div>
+                    </div>
+                    <button class="btn-delete-team" data-id="${member.id}" style="background: none; border: none; color: #ff3b30; font-size: 1.2rem; cursor: pointer; padding: 0 10px;">&times;</button>
+                `;
+                adminTeamList.appendChild(div);
+            });
+
+            // Attach the Firebase delete command
+            document.querySelectorAll('.btn-delete-team').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    if (confirm('Are you sure you want to remove this team member?')) {
+                        try {
+                            await deleteDoc(doc(db, "team", e.target.getAttribute('data-id')));
+                            alert('Team member removed from the site!'); 
+                            location.reload();
+                        } catch(err) { 
+                            alert("Error deleting member: " + err.message); 
+                        }
+                    }
+                });
+            });
+        } else {
+            adminTeamList.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No team members added yet.</p>';
+        }
+    }
 }
 
 function setupMobileMenu() {
@@ -504,13 +547,13 @@ function initAuth() {
             if (!user) {
                 window.location.replace('login.html');
             } else {
-                // NEW: Super Admin Check
-                // Replace this with your exact login email
-                const superAdminEmail = "YOUR_EMAIL@gmail.com"; 
+                // THE PRIVACY FIX: Use UID instead of Email
+                const superAdminUID = "jMjPrre85pgv21JofqXqVnKbyXc2"; 
                 
                 const dangerZone = document.getElementById('admin-danger-zone');
-                if (dangerZone && user.email === superAdminEmail) {
-                    dangerZone.style.display = 'block'; // Unhide for you only
+                // Check the UID instead of the email
+                if (dangerZone && user.uid === superAdminUID) {
+                    dangerZone.style.display = 'block'; 
                 }
             }
         });
