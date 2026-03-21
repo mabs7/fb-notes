@@ -377,6 +377,106 @@ function initAdminPage() {
             }
         });
     }
+
+    // --- NEW: MANAGE NOTES LIST ---
+    const adminNotesList = document.getElementById('admin-notes-list');
+    if (adminNotesList && state.notes.length > 0) {
+        adminNotesList.innerHTML = ''; // Clear loading state
+        
+        state.notes.forEach(note => {
+            const noteDiv = document.createElement('div');
+            noteDiv.style.display = 'flex';
+            noteDiv.style.justifyContent = 'space-between';
+            noteDiv.style.alignItems = 'center';
+            noteDiv.style.padding = '12px';
+            noteDiv.style.border = '1px solid var(--border-light)';
+            noteDiv.style.borderRadius = 'var(--radius-md)';
+            
+            noteDiv.innerHTML = `
+                <div>
+                    <div style="font-weight: 600; font-size: 0.95rem; color: var(--text-main);">${note.topic}</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">${note.className} • ${note.subject}</div>
+                </div>
+                <button class="btn-delete-note" data-id="${note.id}" style="background: none; border: none; color: #ff3b30; font-size: 1.5rem; cursor: pointer; padding: 0 10px;">&times;</button>
+            `;
+            adminNotesList.appendChild(noteDiv);
+        });
+
+        // Attach Firebase delete commands to the new buttons
+        document.querySelectorAll('.btn-delete-note').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                if (confirm('Are you sure you want to permanently delete this note?')) {
+                    const noteId = e.target.getAttribute('data-id');
+                    try {
+                        // Delete specific document from the 'notes' collection
+                        await deleteDoc(doc(db, "notes", noteId));
+                        alert('Note deleted from the cloud!');
+                        location.reload();
+                    } catch(err) {
+                        alert("Error deleting note: " + err.message);
+                    }
+                }
+            });
+        });
+    } else if (adminNotesList) {
+        adminNotesList.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No notes in the database.</p>';
+    }
+
+    // --- MANAGE CLASSES LIST ---
+    const adminClassesList = document.getElementById('admin-classes-list');
+    if (adminClassesList) {
+        adminClassesList.innerHTML = '';
+        state.classes.forEach(cls => {
+            const div = document.createElement('div');
+            div.style.display = 'flex'; div.style.justifyContent = 'space-between'; div.style.alignItems = 'center';
+            div.style.padding = '10px'; div.style.border = '1px solid var(--border-light)'; div.style.borderRadius = 'var(--radius-md)';
+            
+            div.innerHTML = `
+                <span style="font-weight: 500;">${cls.name}</span>
+                <button class="btn-delete-class" data-id="${cls.id}" style="background: none; border: none; color: #ff3b30; font-size: 1.2rem; cursor: pointer;">&times;</button>
+            `;
+            adminClassesList.appendChild(div);
+        });
+
+        document.querySelectorAll('.btn-delete-class').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                if (confirm('Delete this class?')) {
+                    try {
+                        await deleteDoc(doc(db, "classes", e.target.getAttribute('data-id')));
+                        alert('Class deleted!'); location.reload();
+                    } catch(err) { alert("Error: " + err.message); }
+                }
+            });
+        });
+    }
+
+    // --- MANAGE SUBJECTS LIST ---
+    const adminSubjectsList = document.getElementById('admin-subjects-list');
+    if (adminSubjectsList) {
+        adminSubjectsList.innerHTML = '';
+        state.subjects.forEach(sub => {
+            const div = document.createElement('div');
+            div.style.display = 'flex'; div.style.justifyContent = 'space-between'; div.style.alignItems = 'center';
+            div.style.padding = '10px'; div.style.border = '1px solid var(--border-light)'; div.style.borderRadius = 'var(--radius-md)';
+            
+            div.innerHTML = `
+                <span style="font-weight: 500;">${sub.name}</span>
+                <button class="btn-delete-subject" data-id="${sub.id}" style="background: none; border: none; color: #ff3b30; font-size: 1.2rem; cursor: pointer;">&times;</button>
+            `;
+            adminSubjectsList.appendChild(div);
+        });
+
+        document.querySelectorAll('.btn-delete-subject').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                if (confirm('Delete this subject?')) {
+                    try {
+                        await deleteDoc(doc(db, "subjects", e.target.getAttribute('data-id')));
+                        alert('Subject deleted!'); location.reload();
+                    } catch(err) { alert("Error: " + err.message); }
+                }
+            });
+        });
+    }
 }
 
 function setupMobileMenu() {
@@ -402,8 +502,16 @@ function initAuth() {
     if (currentPath.includes('admin')) {
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                // Not logged in? Kick them to the login page immediately.
                 window.location.replace('login.html');
+            } else {
+                // NEW: Super Admin Check
+                // Replace this with your exact login email
+                const superAdminEmail = "YOUR_EMAIL@gmail.com"; 
+                
+                const dangerZone = document.getElementById('admin-danger-zone');
+                if (dangerZone && user.email === superAdminEmail) {
+                    dangerZone.style.display = 'block'; // Unhide for you only
+                }
             }
         });
     }

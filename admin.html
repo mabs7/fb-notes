@@ -46,21 +46,27 @@
         </section>
 
         <section class="admin-card">
-            <h2>Add Subject</h2>
-            <form id="form-add-subject" class="admin-form">
-                <input type="text" id="input-subject-id" class="admin-input" placeholder="Subject ID (e.g., urdu)" required>
-                <input type="text" id="input-subject-name" class="admin-input" placeholder="Subject Name (e.g., Urdu)" required>
-                <button type="submit" class="btn-primary" style="background-color: var(--text-main);">Add Subject</button>
-            </form>
+            <h2>Manage Notes</h2>
+            <div id="admin-notes-list" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                </div>
         </section>
 
         <section class="admin-card">
-            <h2>Add Class</h2>
+            <h2>Manage Subjects</h2>
+            <form id="form-add-subject" class="admin-form">
+                <input type="text" id="input-subject-name" class="admin-input" placeholder="Subject Name (e.g., Urdu)" required>
+                <button type="submit" class="btn-primary" style="background-color: var(--text-main);">Add Subject</button>
+            </form>
+            <div id="admin-subjects-list" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;"></div>
+        </section>
+
+        <section class="admin-card">
+            <h2>Manage Classes</h2>
             <form id="form-add-class" class="admin-form">
-                <input type="text" id="input-class-id" class="admin-input" placeholder="Class ID (e.g., 8)" required>
                 <input type="text" id="input-class-name" class="admin-input" placeholder="Class Name (e.g., Class 8)" required>
                 <button type="submit" class="btn-primary" style="background-color: var(--text-main);">Add Class</button>
             </form>
+            <div id="admin-classes-list" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;"></div>
         </section>
 
         <section class="admin-card">
@@ -78,9 +84,9 @@
             </form>
         </section>
 
-        <section class="admin-card" style="border: 1px solid #ff3b30;">
-            <h2 style="color: #ff3b30;">Erase All Data</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">This action cannot be undone.</p>
+        <section id="admin-danger-zone" class="admin-card" style="border: 1px solid #ff3b30; display: none;">
+            <h2 style="color: #ff3b30;">Super Admin Zone</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Erase all data. This action cannot be undone.</p>
             <button id="btn-reset-db" class="btn-primary" style="background-color: #ff3b30; width: 100%;">Reset Database</button>
         </section>
     </main>
