@@ -176,12 +176,25 @@ function renderHomePage() {
         navSubjectDropdown.appendChild(navItem);
     });
 
-    if (teamGrid) {
+    // --- RENDER HOMEPAGE TEAM BANNER ---
+    const homeTeamBanner = document.getElementById('home-team-banner');
+    if (homeTeamBanner && state.team && state.team.length > 0) {
+        homeTeamBanner.innerHTML = ''; 
+        
         state.team.forEach(member => {
-            const card = document.createElement('div'); card.className = 'team-card';
-            card.innerHTML = `<img src="${member.img}" class="team-img"><div class="team-name">${member.name}</div><div class="team-subject">${member.subject}</div>`;
-            teamGrid.appendChild(card);
+            const a = document.createElement('a');
+            a.href = 'about.html'; 
+            a.className = 'team-member-link';
+            
+            a.innerHTML = `
+                <img src="${member.img}" class="team-banner-img" alt="${member.name}">
+                <div class="team-banner-name">${member.name.split(' ')[0]}</div> 
+            `; 
+            
+            homeTeamBanner.appendChild(a);
         });
+    } else if (homeTeamBanner) {
+        homeTeamBanner.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">Team loading...</p>';
     }
 
     if (tickerContainer) {
@@ -294,6 +307,27 @@ function renderNotePage() {
     document.getElementById('page-title').textContent = `${topic} | FB Notes`;
     if (driveLink.includes('/view')) driveLink = driveLink.replace(/\/view.*/, '/preview');
     iframe.src = driveLink;
+}
+
+function renderAboutPage() {
+    const aboutTeamContainer = document.getElementById('dynamic-about-team');
+    if (!aboutTeamContainer) return; // Only run if we are actually on the About page
+
+    if (state.team && state.team.length > 0) {
+        aboutTeamContainer.innerHTML = ''; // Clear out loading state
+        state.team.forEach(member => {
+            const card = document.createElement('div');
+            card.className = 'about-team-card';
+            card.innerHTML = `
+                <img src="${member.img}" class="about-team-img" alt="${member.name}">
+                <div class="about-team-name">${member.name}</div>
+                <div class="about-team-subject">${member.subject}</div>
+            `;
+            aboutTeamContainer.appendChild(card);
+        });
+    } else {
+        aboutTeamContainer.innerHTML = '<p style="color: var(--text-muted);">Team information loading...</p>';
+    }
 }
 
 // ==========================================
@@ -656,6 +690,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderHomePage();   
     renderClassPage();  
     renderSubjectPage(); 
-    renderNotePage();   
+    renderNotePage();
+    renderAboutPage();   
     initAdminPage();    
 });
