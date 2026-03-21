@@ -144,59 +144,57 @@ function initThemeToggle() {
 // ==========================================
 function renderHomePage() {
     const classGrid = document.getElementById('dynamic-class-grid');
-    if (!classGrid) return; 
-
-    const subjectGrid = document.getElementById('dynamic-subject-grid');
-    const teamGrid = document.getElementById('dynamic-team-grid');
+    const homeTeamBanner = document.getElementById('home-team-banner');
     const navClassDropdown = document.getElementById('nav-class-dropdown');
-    const navSubjectDropdown = document.getElementById('nav-subject-dropdown');
     const tickerContainer = document.getElementById('dynamic-ticker');
     const searchInput = document.getElementById('main-search');
     const searchDropdown = document.getElementById('search-dropdown-results');
 
-    state.classes.forEach((cls, index) => {
-        const url = `class.html?name=${encodeURIComponent(cls.name)}`;
-        const tint = colorTints[index % colorTints.length];
+    // 1. Render Classes
+    if (classGrid && state.classes) {
+        classGrid.innerHTML = '';
+        if (navClassDropdown) navClassDropdown.innerHTML = '';
         
-        const card = document.createElement('a'); card.href = url; card.className = `grid-card ${tint}`; card.textContent = cls.name;
-        classGrid.appendChild(card);
-
-        const navItem = document.createElement('a'); navItem.href = url; navItem.className = 'dropdown-item'; navItem.textContent = cls.name;
-        navClassDropdown.appendChild(navItem);
-    });
-
-    state.subjects.forEach((sub, index) => {
-        const url = `subject.html?name=${encodeURIComponent(sub.name)}`;
-        const tint = colorTints[(index + 2) % colorTints.length];
-
-        const card = document.createElement('a'); card.href = url; card.className = `grid-card ${tint}`; card.textContent = sub.name;
-        subjectGrid.appendChild(card);
-
-        const navItem = document.createElement('a'); navItem.href = url; navItem.className = 'dropdown-item'; navItem.textContent = sub.name;
-        navSubjectDropdown.appendChild(navItem);
-    });
-
-    // --- RENDER HOMEPAGE TEAM BANNER ---
-    const homeTeamBanner = document.getElementById('home-team-banner');
-    if (homeTeamBanner && state.team && state.team.length > 0) {
-        homeTeamBanner.innerHTML = ''; 
-        
-        state.team.forEach(member => {
-            const a = document.createElement('a');
-            a.href = 'about.html'; 
-            a.className = 'team-member-link';
+        state.classes.forEach((cls, index) => {
+            const url = `class.html?name=${encodeURIComponent(cls.name)}`;
+            const tint = colorTints[index % colorTints.length];
             
-            a.innerHTML = `
-                <img src="${member.img}" class="team-banner-img" alt="${member.name}">
-                <div class="team-banner-name">${member.name.split(' ')[0]}</div> 
-            `; 
-            
-            homeTeamBanner.appendChild(a);
+            const card = document.createElement('a'); 
+            card.href = url; 
+            card.className = `grid-card ${tint}`; 
+            card.textContent = cls.name;
+            classGrid.appendChild(card);
+
+            if (navClassDropdown) {
+                const navItem = document.createElement('a'); 
+                navItem.href = url; 
+                navItem.className = 'dropdown-item'; 
+                navItem.textContent = cls.name;
+                navClassDropdown.appendChild(navItem);
+            }
         });
-    } else if (homeTeamBanner) {
-        homeTeamBanner.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">Team loading...</p>';
     }
 
+    // 2. Render Team Banner
+    if (homeTeamBanner) {
+        homeTeamBanner.innerHTML = '';
+        if (state.team && state.team.length > 0) {
+            state.team.forEach(member => {
+                const a = document.createElement('a');
+                a.href = 'about.html'; 
+                a.className = 'team-member-link';
+                a.innerHTML = `
+                    <img src="${member.img}" class="team-banner-img" alt="${member.name}">
+                    <div class="team-banner-name">${member.name.split(' ')[0]}</div> 
+                `; 
+                homeTeamBanner.appendChild(a);
+            });
+        } else {
+            homeTeamBanner.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem; margin: auto;">Team loading...</p>';
+        }
+    }
+
+    // 3. Render Ticker
     if (tickerContainer) {
         if (state.notes.length === 0) {
             tickerContainer.innerHTML = '<span>Welcome to FB Notes! Log in to the Admin panel to add content.</span>';
@@ -211,6 +209,7 @@ function renderHomePage() {
         }
     }
 
+    // 4. Render Search
     if (searchInput && searchDropdown) {
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
