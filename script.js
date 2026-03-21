@@ -50,7 +50,6 @@ async function loadCloudDatabase() {
             getDocs(collection(db, "subjects")),
             getDocs(collection(db, "notes")),
             getDocs(collection(db, "team")),
-            getDocs(collection(db, "messages"))
         ]);
 
         // Unpack the Firebase data
@@ -58,7 +57,6 @@ async function loadCloudDatabase() {
         state.subjects = subjectsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         state.notes = notesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         state.team = teamSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        state.messages = messagesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
         // Sort notes by date
         state.notes.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -545,46 +543,54 @@ function initAdminPage() {
     // --- NEW: SECURE INBOX RENDERER ---
     const adminMessagesList = document.getElementById('admin-messages-list');
     if (adminMessagesList) {
-        adminMessagesList.innerHTML = '';
-        if (state.messages && state.messages.length > 0) {
-            state.messages.forEach(msg => {
-                const div = document.createElement('div');
-                div.style.padding = '15px'; 
-                div.style.border = '1px solid var(--border-light)'; 
-                div.style.borderRadius = 'var(--radius-md)';
-                div.style.backgroundColor = 'var(--card-bg)';
-                
-                div.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <div>
-                            <strong style="color: var(--text-main); font-size: 1rem;">${msg.name}</strong>
-                            <span style="color: var(--text-muted); font-size: 0.85rem; margin-left: 10px;">${msg.date}</span>
+        adminMessagesList.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">Decrypting secure inbox...</p>';
+        
+        // 1. Fetch the private messages securely
+        getDocs(collection(db, "messages")).then(messagesSnap => {
+            state.messages = messagesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            
+            // 2. Render them to the screen
+            adminMessagesList.innerHTML = '';
+            if (state.messages && state.messages.length > 0) {
+                state.messages.forEach(msg => {
+                    const div = document.createElement('div');
+                    div.style.padding = '15px'; div.style.border = '1px solid var(--border-light)'; 
+                    div.style.borderRadius = 'var(--radius-md)'; div.style.backgroundColor = 'var(--card-bg)';
+                    
+                    div.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <div>
+                                <strong style="color: var(--text-main); font-size: 1rem;">${msg.name}</strong>
+                                <span style="color: var(--text-muted); font-size: 0.85rem; margin-left: 10px;">${msg.date || ''}</span>
+                            </div>
+                            <button class="btn-delete-msg" data-id="${msg.id}" style="background: none; border: none; color: #ff3b30; font-size: 1.2rem; cursor: pointer;">&times;</button>
                         </div>
-                        <button class="btn-delete-msg" data-id="${msg.id}" style="background: none; border: none; color: #ff3b30; font-size: 1.2rem; cursor: pointer;">&times;</button>
-                    </div>
-                    <div style="font-size: 0.9rem; margin-bottom: 12px;">
-                        <a href="mailto:${msg.email}" style="color: var(--accent); text-decoration: none;">Reply to: ${msg.email}</a>
-                    </div>
-                    <p style="font-size: 0.95rem; color: var(--text-main); line-height: 1.5; white-space: pre-wrap; margin: 0;">${msg.message}</p>
-                `;
-                adminMessagesList.appendChild(div);
-            });
-
-            // Attach Firebase delete commands to the trash buttons
-            document.querySelectorAll('.btn-delete-msg').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    if (confirm('Delete this message permanently?')) {
-                        try {
-                            await deleteDoc(doc(db, "messages", e.target.getAttribute('data-id')));
-                            sessionStorage.removeItem('fbNotesCache'); // Clear cache!
-                            location.reload();
-                        } catch(err) { alert("Error deleting message: " + err.message); }
-                    }
+                        <div style="font-size: 0.9rem; margin-bottom: 12px;">
+                            <a href="mailto:${msg.email}" style="color: var(--accent); text-decoration: none;">Reply to: ${msg.email}</a>
+                        </div>
+                        <p style="font-size: 0.95rem; color: var(--text-main); line-height: 1.5; white-space: pre-wrap; margin: 0;">${msg.message}</p>
+                    `;
+                    adminMessagesList.appendChild(div);
                 });
-            });
-        } else {
-            adminMessagesList.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">Your inbox is empty. All caught up!</p>';
-        }
+
+                // Attach Firebase delete commands to the trash buttons
+                document.querySelectorAll('.btn-delete-msg').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        if (confirm('Delete this message permanently?')) {
+                            try {
+                                await deleteDoc(doc(db, "messages", e.target.getAttribute('data-id')));
+                                location.reload(); // We don't need to clear the backpack here since messages aren't in it!
+                            } catch(err) { alert("Error deleting message: " + err.message); }
+                        }
+                    });
+                });
+            } else {
+                adminMessagesList.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">Your inbox is empty. All caught up!</p>';
+            }
+        }).catch(err => {
+            console.error("Inbox Error:", err);
+            adminMessagesList.innerHTML = '<p style="color: #ff3b30; font-size: 0.9rem;">Security blocked inbox access. Are you logged in?</p>';
+        });
     }
 
     // --- MANAGE CLASSES LIST ---
