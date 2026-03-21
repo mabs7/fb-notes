@@ -36,6 +36,39 @@
 body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; transition: background-color 0.3s, color 0.3s; }
 h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; }
 
+/* --- Dark Mode Card Tints --- */
+/* Uses 15% opacity backgrounds and 30% opacity borders for a native feel */
+[data-theme="dark"] .tint-blue { 
+    background-color: rgba(10, 132, 255, 0.15); 
+    border-color: rgba(10, 132, 255, 0.3); 
+    color: #8bb4f6; 
+}
+[data-theme="dark"] .tint-green { 
+    background-color: rgba(48, 209, 88, 0.15); 
+    border-color: rgba(48, 209, 88, 0.3); 
+    color: #81c995; 
+}
+[data-theme="dark"] .tint-orange { 
+    background-color: rgba(255, 159, 10, 0.15); 
+    border-color: rgba(255, 159, 10, 0.3); 
+    color: #fdb075; 
+}
+[data-theme="dark"] .tint-purple { 
+    background-color: rgba(191, 90, 242, 0.15); 
+    border-color: rgba(191, 90, 242, 0.3); 
+    color: #c58af9; 
+}
+[data-theme="dark"] .tint-pink { 
+    background-color: rgba(255, 55, 95, 0.15); 
+    border-color: rgba(255, 55, 95, 0.3); 
+    color: #f98fb6; 
+}
+[data-theme="dark"] .tint-yellow { 
+    background-color: rgba(255, 214, 10, 0.15); 
+    border-color: rgba(255, 214, 10, 0.3); 
+    color: #fde293; 
+}
+
 /* =========================================
    2. FROSTED HEADER & TICKER (Mobile First)
    ========================================= */
@@ -89,6 +122,23 @@ h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; }
 .ticker-item { margin: 0 15px; }
 .ticker-item a { color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.4); padding-bottom: 1px; transition: border-color 0.2s; }
 .ticker-item a:hover { border-color: #fff; }
+
+/* --- Apple-Style Back Arrow --- */
+.back-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 1.5rem;
+    margin-right: 12px;
+    font-weight: 500;
+    transition: opacity 0.2s, transform 0.2s;
+}
+.back-arrow:active {
+    transform: scale(0.90);
+    opacity: 0.7;
+}
 
 /* =========================================
    3. HERO SECTION & SPOTLIGHT SEARCH
