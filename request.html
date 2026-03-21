@@ -49,24 +49,14 @@
         </section>
 
         <section class="admin-card">
-            <form class="admin-form" onsubmit="event.preventDefault(); alert('Request submitted! Our team will work on this topic soon.'); this.reset();">
-                <input type="text" class="admin-input" placeholder="Topic Name (e.g., Bohr's Atomic Model)" required>
-                
-                <div class="form-row">
-                    <select class="admin-input" required>
-                        <option value="">Select Class</option>
-                        <option value="9">Class 9</option>
-                        <option value="10">Class 10</option>
-                        <option value="11">Class 11</option>
-                        <option value="12">Class 12</option>
-                    </select>
-                    <input type="text" class="admin-input" placeholder="Subject (e.g., Chemistry)" required>
-                </div>
-                
-                <textarea class="admin-input" rows="4" placeholder="Any specific details or questions you want covered in these notes?" style="resize: vertical; font-family: inherit;"></textarea>
-                
-                <button type="submit" class="btn-primary" style="margin-top: 10px;">Submit Request</button>
-            </form>
+           <form id="form-request" class="admin-form" style="max-width: 600px; margin: 0 auto;">
+            <input type="text" id="request-name" class="admin-input" placeholder="Your Name" required>
+            <input type="text" id="request-class" class="admin-input" placeholder="Class (e.g., Class 9)" required>
+            <input type="text" id="request-subject" class="admin-input" placeholder="Subject (e.g., Physics)" required>
+            <textarea id="request-topic" class="admin-input" rows="4" placeholder="What specific topic do you need notes for?" required style="resize: vertical;"></textarea>
+            
+            <button type="submit" class="btn-primary" style="background-color: var(--accent); width: 100%; margin-top: 10px;">Submit Request</button>
+        </form>
         </section>
     </main>
 
@@ -75,6 +65,6 @@
             <p>&copy; 2026 FB Notes.</p>
         </div>
     </footer>
-
+    <script type="module" src="script.js"></script>
 </body>
 </html>

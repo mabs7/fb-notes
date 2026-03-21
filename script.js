@@ -27,7 +27,8 @@ let state = {
     subjects: [],
     notes: [],
     team: [],
-    messages: []
+    messages: [],
+    requests: []
 };
 
 // Fetch everything from Firebase (or our local cache) before rendering the site
@@ -390,6 +391,40 @@ function initContactForm() {
     });
 }
 
+function initRequestForm() {
+    const requestForm = document.getElementById('form-request');
+    if (!requestForm) return; 
+
+    requestForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); 
+        
+        const btn = e.target.querySelector('button');
+        const originalText = btn.textContent;
+        btn.textContent = "Submitting securely...";
+        btn.disabled = true;
+
+        try {
+            // Push the data to a new 'requests' collection
+            await addDoc(collection(db, "requests"), {
+                name: document.getElementById('request-name').value,
+                className: document.getElementById('request-class').value,
+                subject: document.getElementById('request-subject').value,
+                topic: document.getElementById('request-topic').value,
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                status: 'pending' 
+            });
+            
+            alert("Topic requested successfully! Our team will look into it.");
+            requestForm.reset(); 
+        } catch (error) {
+            alert("Error submitting request: " + error.message);
+        } finally {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+    });
+}
+
 // ==========================================
 // 5. ADMIN DASHBOARD CLOUD WRITES
 // ==========================================
@@ -590,6 +625,59 @@ function initAdminPage() {
         }).catch(err => {
             console.error("Inbox Error:", err);
             adminMessagesList.innerHTML = '<p style="color: #ff3b30; font-size: 0.9rem;">Security blocked inbox access. Are you logged in?</p>';
+        });
+    }
+
+    // --- NEW: STUDENT REQUESTS RENDERER ---
+    const adminRequestsList = document.getElementById('admin-requests-list');
+    if (adminRequestsList) {
+        adminRequestsList.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">Fetching pending requests...</p>';
+        
+        // 1. Fetch the private requests securely
+        getDocs(collection(db, "requests")).then(requestsSnap => {
+            state.requests = requestsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            
+            // 2. Render them to the screen
+            adminRequestsList.innerHTML = '';
+            if (state.requests && state.requests.length > 0) {
+                state.requests.forEach(req => {
+                    const div = document.createElement('div');
+                    div.style.padding = '15px'; div.style.border = '1px solid var(--border-light)'; 
+                    div.style.borderRadius = 'var(--radius-md)'; div.style.backgroundColor = 'var(--card-bg)';
+                    
+                    div.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <div>
+                                <strong style="color: var(--text-main); font-size: 1rem;">${req.name}</strong>
+                                <span style="color: var(--text-muted); font-size: 0.85rem; margin-left: 10px;">${req.date || ''}</span>
+                            </div>
+                            <button class="btn-delete-req" data-id="${req.id}" style="background: none; border: none; color: #ff3b30; font-size: 1.2rem; cursor: pointer;">&times;</button>
+                        </div>
+                        <div style="font-size: 0.9rem; margin-bottom: 8px; color: var(--accent); font-weight: 500;">
+                            Target: ${req.className} • ${req.subject}
+                        </div>
+                        <p style="font-size: 0.95rem; color: var(--text-main); line-height: 1.5; margin: 0;"><strong>Topic needed:</strong> ${req.topic}</p>
+                    `;
+                    adminRequestsList.appendChild(div);
+                });
+
+                // Attach Firebase delete commands to the trash buttons
+                document.querySelectorAll('.btn-delete-req').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        if (confirm('Delete this request permanently?')) {
+                            try {
+                                await deleteDoc(doc(db, "requests", e.target.getAttribute('data-id')));
+                                location.reload(); 
+                            } catch(err) { alert("Error deleting request: " + err.message); }
+                        }
+                    });
+                });
+            } else {
+                adminRequestsList.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No pending topic requests. You are all caught up!</p>';
+            }
+        }).catch(err => {
+            console.error("Requests Error:", err);
+            adminRequestsList.innerHTML = '<p style="color: #ff3b30; font-size: 0.9rem;">Security blocked access. Are you logged in?</p>';
         });
     }
 
@@ -805,6 +893,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderSubjectPage(); 
     renderNotePage();
     renderAboutPage();
-    initContactForm();   
+    initContactForm();
+    initRequestForm();   
     initAdminPage();    
 });
