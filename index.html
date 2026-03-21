@@ -7,13 +7,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <header class="navbar">
+<header class="navbar">
         <div class="nav-left">
-            <div class="logo">Notes.</div>
+            <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">Notes.</a>
         </div>
-        
-        <button class="hamburger" aria-label="Toggle Menu">☰</button>
         
         <nav class="nav-menu">
             <div class="nav-item">
@@ -25,11 +22,18 @@
                 <a href="#subjects" class="nav-link">Subjects <span class="chevron">▾</span></a>
                 <div class="dropdown-menu" id="nav-subject-dropdown"></div>
             </div>
+
+            <div class="nav-item mobile-only">
+                <a href="login.html" class="nav-link" style="color: var(--accent); font-weight: 500;">Admin Access</a>
+            </div>
         </nav>
         
-        <div class="nav-right">
-            <button id="theme-toggle" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-right: 15px;">🌙</button>
-            <a href="login.html" class="nav-link admin-link">Admin</a>
+        <div class="nav-actions">
+            <button id="theme-toggle" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;">🌙</button>
+            
+            <a href="login.html" class="nav-link admin-link desktop-only">Admin</a>
+            
+            <button class="hamburger" aria-label="Toggle Menu">☰</button>
         </div>
     </header>
 
